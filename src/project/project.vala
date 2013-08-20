@@ -1271,6 +1271,15 @@ public class ValamaProject : ProjectFile {
                 }
         }
 
+        /* Color scheme. */
+        Gtk.SourceStyleScheme style = style_manager.get_scheme (settings.color_scheme);
+        bfr.set_style_scheme (style);
+        settings.changed.connect ( (key) => {
+            if (key == "color-scheme") {
+                bfr.set_style_scheme (style_manager.get_scheme (settings.color_scheme));
+            }
+        });
+
         /* Modified flag. */
         bfr.notify["dirty"].connect (() => {
             this.buffer_changed (bfr.dirty);

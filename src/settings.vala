@@ -19,8 +19,13 @@
 
 class ValamaSettings {
 
+    public signal void changed (string key);
+
     public ValamaSettings() {
         settings = new Settings ("apps.valama");
+        settings.changed.connect ( (key) => {
+            changed (key);
+        });
     }
     Settings settings;
 

@@ -29,6 +29,7 @@ static RecentManager recentmgr;
 static WelcomeScreen? vscreen = null;
 static Valama gtk_app;
 static ValamaSettings settings;
+static SourceStyleSchemeManager style_manager;
 
 public static int main (string[] args) {
     Intl.textdomain (Config.GETTEXT_PACKAGE);
@@ -40,6 +41,12 @@ public static int main (string[] args) {
                                        "recent_projects.xml"));
 
     settings = new ValamaSettings ();
+    style_manager = new SourceStyleSchemeManager();
+    style_manager.set_search_path ({"~/.local/share/gtksourceview-3.0/styles/", 
+                                                "/usr/share/gnome/gtksourceview-3.0/styles/",
+                                                "/usr/local/share/gtksourceview-3.0/styles/",
+                                                "/usr/share/gtksourceview-3.0/styles/"});
+    style_manager.force_rescan();
 
     /* Command line parsing. */
     /* Copied from Yorba application. */
