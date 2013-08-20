@@ -32,6 +32,11 @@ class ValamaSettings {
         get { return settings.get_int ("window-size-y"); }
         set { settings.set_int ("window-size-y", value); }
     }
+    
+    public string color_scheme {
+        owned get { return settings.get_string ("color-scheme"); }
+        set { settings.set_string ("color-scheme", value); }
+    }
 
 }
 
