@@ -1277,6 +1277,8 @@ public class ValamaProject : ProjectFile {
         settings.changed.connect ( (key) => {
             if (key == "color-scheme") {
                 bfr.set_style_scheme (style_manager.get_scheme (settings.color_scheme));
+            } else if (key.has_prefix ("font")) {
+                view.override_font (FontDescription.from_string (settings.font));
             }
         });
 

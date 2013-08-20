@@ -32,15 +32,22 @@ class ValamaSettings {
     public int window_size_x {
         get { return settings.get_int ("window-size-x"); }
         set { settings.set_int ("window-size-x", value); }
+        default = 950;
     }
     public int window_size_y {
         get { return settings.get_int ("window-size-y"); }
         set { settings.set_int ("window-size-y", value); }
+        default = 700;
     }
-    
     public string color_scheme {
         owned get { return settings.get_string ("color-scheme"); }
         set { settings.set_string ("color-scheme", value); }
+        default = "classic";
+    }
+    public string font {
+        owned get { return settings.get_string ("font"); }
+        set { settings.set_string ("font", value); }
+        default = "monospace 11";
     }
 
 }

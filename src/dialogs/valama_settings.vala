@@ -26,9 +26,9 @@ public void ui_settings_dialog () {
     var dlg = new Dialog.with_buttons (_("Global settings"), 
                                           window_main, 
                                           DialogFlags.MODAL,
-                                          Stock.CANCEL,
+                                          _("Cancel"),
                                           ResponseType.CANCEL,
-                                          Stock.SAVE,
+                                          _("Save"),
                                           ResponseType.OK,
                                           null);
     dlg.set_size_request (420, 200);
@@ -63,7 +63,13 @@ public void ui_settings_dialog () {
             settings.color_scheme = (string) v;
         }
     });
+    box.pack_start (list_view);
 
+    var font_button = new FontButton.with_font (settings.font);
+    box.pack_start (font_button);
+    font_button.font_set.connect (() => {
+        settings.font = font_button.get_font_name();
+    });
     dlg.response.connect ((response_id) => {
         switch (response_id) {
             case ResponseType.OK:
@@ -75,6 +81,6 @@ public void ui_settings_dialog () {
                 break;
         }
     });
-    box.pack_start (list_view);
+
     dlg.show_all ();
 }
