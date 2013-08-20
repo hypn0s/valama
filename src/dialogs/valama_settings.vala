@@ -36,18 +36,20 @@ public void ui_settings_dialog () {
 
     var box = dlg.get_content_area();
     box.set_orientation (Orientation.VERTICAL);
-    var list = new ListStore (1, typeof (string), null);
+    var list = new ListStore (2, typeof (string), typeof (string), null);
     TreeIter iter;
     TreePath path = null;
     foreach (string id in style_manager.get_scheme_ids()) {
         list.append (out iter);
-        list.set (iter, 0, id, -1);
+        Gtk.SourceStyleScheme style = style_manager.get_scheme (id);
+        list.set (iter, 0, id, 1, style.description, -1);
         if (id == settings.color_scheme) {
             path = list.get_path (iter);
         }
     }
     var list_view = new TreeView.with_model (list);
-    list_view.insert_column_with_attributes (-1, _("Color scheme"), new CellRendererText (), "text", 0, null);
+    list_view.insert_column_with_attributes (-1, _("Color scheme"), new CellRendererText(), "text", 0, null);
+    list_view.insert_column_with_attributes (-1, _("Description"), new CellRendererText(), "text", 1, null);
     if (path != null) {
         list_view.set_cursor (path, null, false);
     }
