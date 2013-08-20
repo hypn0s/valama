@@ -23,12 +23,12 @@ using Gtk;
 public void ui_settings_dialog () {
     string last_scheme = settings.color_scheme;
 
-    var dlg = new Dialog.with_buttons (_("Global settings"), 
+    var dlg = new Dialog.with_buttons (_("_Preferences"), 
                                           window_main, 
                                           DialogFlags.MODAL,
-                                          _("Cancel"),
+                                          _("_Cancel"),
                                           ResponseType.CANCEL,
-                                          _("Save"),
+                                          _("_Save"),
                                           ResponseType.OK,
                                           null);
     dlg.set_size_request (420, 200);
