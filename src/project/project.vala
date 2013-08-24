@@ -1302,17 +1302,12 @@ public class ValamaProject : ProjectFile {
             return false;
         });
 
-        view.show_line_numbers = true;
-        view.insert_spaces_instead_of_tabs = true;
-        view.override_font (FontDescription.from_string ("Monospace 10"));
-        view.auto_indent = true;
-        view.indent_width = 4;
-
         bfr.begin_not_undoable_action();
         bfr.text = txt;
         bfr.end_not_undoable_action();
 
-        bfr.highlight_matching_brackets = true;
+        /* Load settings */
+        load_editor_settings (view);
 
         /* Undo manager. */
         var undoman = bfr.get_undo_manager();
@@ -1324,7 +1319,6 @@ public class ValamaProject : ProjectFile {
         });
 
         /* Syntax highlighting. */
-        bfr.set_highlight_syntax (true);
         var langman = new SourceLanguageManager();
         SourceLanguage lang;
         if (filename == "")
@@ -1348,14 +1342,8 @@ public class ValamaProject : ProjectFile {
         }
 
         /* Color scheme. */
-        Gtk.SourceStyleScheme style = style_manager.get_scheme (settings.color_scheme);
-        bfr.set_style_scheme (style);
         settings.changed.connect ( (key) => {
-            if (key == "color-scheme") {
-                bfr.set_style_scheme (style_manager.get_scheme (settings.color_scheme));
-            } else if (key.has_prefix ("font")) {
-                view.override_font (FontDescription.from_string (settings.font));
-            }
+            load_editor_settings (view);
         });
 
         /* Modified flag. */
@@ -1405,6 +1393,26 @@ public class ValamaProject : ProjectFile {
         vieworder.offer_head (vmap);
         debug_msg (_("Buffer loaded.\n"));
         return view;
+    }
+
+    /**
+     * Load the editor settings from GSettings schema.
+     * 
+     * @param view {@link Gtk.SourceView} the view to update.
+     */
+    private void load_editor_settings (SourceView view) {
+        var bfr = view.get_buffer() as SourceBuffer;
+        bfr.set_style_scheme (style_manager.get_scheme (settings.color_scheme));
+        view.override_font (FontDescription.from_string (settings.font));
+        view.set_show_line_numbers (settings.show_line_numbers);
+        view.set_insert_spaces_instead_of_tabs (settings.use_spaces_instead_of_tabs);
+        view.set_tab_width (settings.tab_width);
+        bfr.set_highlight_matching_brackets (settings.highlight_matching_brackets);
+        bfr.set_highlight_syntax (settings.highlight_syntax);
+        view.set_show_right_margin (settings.show_right_margin);
+        view.set_right_margin_position (settings.right_margin_position);
+        view.set_draw_spaces (settings.show_spaces);
+        view.set_auto_indent (settings.auto_indent);
     }
 
     /**

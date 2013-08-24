@@ -25,21 +25,20 @@ public class SettingsBox: Paned {
     public TreeView sections { get; private set; }
     public Map<string, Widget> sections_contents { get; private set; }
     public Frame content;
-    
+
     public SettingsBox() {
-        
         var model = new ListStore (2, typeof (Gdk.Pixbuf), typeof (string), null);
         sections = new TreeView.with_model (model);
         sections.insert_column_with_attributes (-1, null, new CellRendererPixbuf(), "pixbuf", 0, null);
         sections.insert_column_with_attributes (-1, _("Sections"), new CellRendererText(), "text", 1, null);
-        
+
         sections_contents = new HashMap<string, Widget>();
-        
+
         content = new Frame (null);
-        
+
         pack1 (sections, true, false);
         pack2 (content, false, false);
-        
+
         sections.cursor_changed.connect (() => {
             var select = sections.get_selection ();
             TreeModel m;
@@ -57,7 +56,7 @@ public class SettingsBox: Paned {
             }
         });
     }
-    
+
     public void add_section (string icon_name, string label, Widget content) {
         sections_contents.set (label, content);
         TreeIter it;

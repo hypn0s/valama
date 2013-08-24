@@ -313,7 +313,7 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${manfile}" DESTINATION "${mandir}/ma
 
 # Gsettings schemas
 include(GSettings)
-add_schema ("data/apps.valama.gschema.xml")
+add_schema ("data/org.valama.gschema.xml")
 
 install(TARGETS ${project_name_lower} DESTINATION "${bindir}")
 
