@@ -1,4 +1,10 @@
 <schemalist>
+    <flags id="org.valama.spacesflags">
+        <value nick="space" value="1"/>
+        <value nick="tab" value="2"/>
+        <value nick="newline" value="4"/>
+    </flags>
+
     <schema id="org.valama" path="/org/valama/" gettext-domain="valama">
 
         <key name="window-size-x" type="i">
@@ -74,8 +80,8 @@
             <description></description>
         </key>
 
-        <key name="show-spaces" type="i">
-            <default>0</default>
+        <key name="show-spaces" flags="org.valama.spacesflags">
+            <default>[]</default>
             <summary>Show different spaces character</summary>
             <description>
             </description>

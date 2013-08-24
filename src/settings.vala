@@ -17,81 +17,75 @@
  *
  */
 
-class ValamaSettings {
-
-    public signal void changed (string key);
+class ValamaSettings: Settings {
 
     public ValamaSettings() {
-        settings = new Settings ("org.valama");
-        settings.changed.connect ( (key) => {
-            changed (key);
-        });
+        Object (schema_id: "org.valama");    
     }
-    Settings settings;
 
     public int window_size_x {
-        get { return settings.get_int ("window-size-x"); }
-        set { settings.set_int ("window-size-x", value); }
+        get { return this.get_int ("window-size-x"); }
+        set { this.set_int ("window-size-x", value); }
         default = 950;
     }
     public int window_size_y {
-        get { return settings.get_int ("window-size-y"); }
-        set { settings.set_int ("window-size-y", value); }
+        get { return this.get_int ("window-size-y"); }
+        set { this.set_int ("window-size-y", value); }
         default = 700;
     }
     public string color_scheme {
-        owned get { return settings.get_string ("color-scheme"); }
-        set { settings.set_string ("color-scheme", value); }
+        owned get { return this.get_string ("color-scheme"); }
+        set { this.set_string ("color-scheme", value); }
         default = "classic";
     }
     public string font {
-        owned get { return settings.get_string ("font"); }
-        set { settings.set_string ("font", value); }
+        owned get { return this.get_string ("font"); }
+        set { this.set_string ("font", value); }
         default = "monospace 11";
     }
     public bool show_line_numbers {
-        get { return settings.get_boolean ("show-line-numbers"); }
-        set { settings.set_boolean ("show-line-numbers", value); }
+        get { return this.get_boolean ("show-line-numbers"); }
+        set { this.set_boolean ("show-line-numbers", value); }
         default = true;
     }
     public bool use_spaces_instead_of_tabs {
-        get { return settings.get_boolean ("use-spaces-instead-of-tabs"); }
-        set { settings.set_boolean ("use-spaces-instead-of-tabs", value); }
+        get { return this.get_boolean ("use-spaces-instead-of-tabs"); }
+        set { this.set_boolean ("use-spaces-instead-of-tabs", value); }
         default = true;
     }
     public int tab_width {
-        get { return settings.get_int ("tab-width"); }
-        set { settings.set_int ("tab-width", value); }
+        get { return this.get_int ("tab-width"); }
+        set { this.set_int ("tab-width", value); }
         default = 4;
     }
     public bool highlight_matching_brackets {
-        get { return settings.get_boolean ("highlight-matching-brackets"); }
-        set { settings.set_boolean ("highlight-matching-brackets", value); }
+        get { return this.get_boolean ("highlight-matching-brackets"); }
+        set { this.set_boolean ("highlight-matching-brackets", value); }
         default = true;
     }
     public bool highlight_syntax {
-        get { return settings.get_boolean ("highlight-syntax"); }
-        set { settings.set_boolean ("highlight-syntax", value); }
+        get { return this.get_boolean ("highlight-syntax"); }
+        set { this.set_boolean ("highlight-syntax", value); }
         default = true;
     }
     public bool show_right_margin {
-        get { return settings.get_boolean ("show-right-margin"); }
-        set { settings.set_boolean ("show-right-margin", value); }
+        get { return this.get_boolean ("show-right-margin"); }
+        set { this.set_boolean ("show-right-margin", value); }
         default = false;
     }
     public int right_margin_position {
-        get { return settings.get_int ("right-margin-position"); }
-        set { settings.set_int ("right-margin-position", value); }
+        get { return this.get_int ("right-margin-position"); }
+        set { this.set_int ("right-margin-position", value); }
         default = 80;
     }
     public Gtk.SourceDrawSpacesFlags show_spaces {
-        owned get { return (Gtk.SourceDrawSpacesFlags) settings.get_int ("show-spaces"); }
-        set { settings.set_int ("show-spaces", value); }
+        get { return (Gtk.SourceDrawSpacesFlags) this.get_flags ("show-spaces"); }
+        set { this.set_flags ("show-spaces", value); }
         default = 0;
     }
     public bool auto_indent {
-        get { return settings.get_boolean ("auto-indent"); }
-        set { settings.set_boolean ("auto-indent", value); }
+        get { return this.get_boolean ("auto-indent"); }
+        set { this.set_boolean ("auto-indent", value); }
         default = true;
     }
 
