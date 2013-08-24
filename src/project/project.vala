@@ -1411,7 +1411,7 @@ public class ValamaProject : ProjectFile {
         bfr.set_highlight_syntax (settings.highlight_syntax);
         view.set_show_right_margin (settings.show_right_margin);
         view.set_right_margin_position (settings.right_margin_position);
-        view.set_draw_spaces (settings.show_spaces);
+        view.set_draw_spaces ((SourceDrawSpacesFlags) settings.show_spaces);
         view.set_auto_indent (settings.auto_indent);
     }
 

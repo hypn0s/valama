@@ -46,7 +46,6 @@ public class SettingsBox: Paned {
             if (select.get_selected (out m, out it)) {
                 Value v;
                 m.get_value (it, 1, out v);
-                stdout.printf ("Section selected: %s\n", (string) v);
                 foreach (Widget c in content.get_children()) {
                     content.remove (c);
                 }
@@ -82,12 +81,86 @@ public void ui_settings_dialog () {
                                           _("_Save"),
                                           ResponseType.OK,
                                           null);
-    dlg.set_size_request (420, 200);
+    dlg.set_size_request (500, 500);
     dlg.resizable = true;
     var settings_box = new SettingsBox();
     var content_area = dlg.get_content_area();
     content_area.pack_start (settings_box);
     var box = new Box (Orientation.VERTICAL, 10);
+    box.margin = 5;
+
+    var grid = new Grid();
+    grid.set_column_spacing (20);
+    grid.set_column_homogeneous (false);
+    grid.set_row_homogeneous (false);
+
+    var show_line_numbers_switch = new Switch();
+    settings.bind ("show-line-numbers", show_line_numbers_switch, "active", SettingsBindFlags.DEFAULT);
+    grid.attach (show_line_numbers_switch, 1, 0, 1, 1);
+    grid.attach_next_to (new Label (_("Show line numbers")), show_line_numbers_switch, PositionType.LEFT, 1, 1);
+
+    var use_spaces_instead_of_tabs_switch = new Switch();
+    settings.bind ("use-spaces-instead-of-tabs", use_spaces_instead_of_tabs_switch, "active", SettingsBindFlags.DEFAULT);
+    grid.attach_next_to (use_spaces_instead_of_tabs_switch, show_line_numbers_switch, PositionType.BOTTOM, 1, 1);
+    grid.attach_next_to (new Label (_("Use spaces instead of tabs")), use_spaces_instead_of_tabs_switch, PositionType.LEFT, 1, 1);
+
+    var tab_width_button = new SpinButton.with_range (1.0, 8.0, 1.0);
+    settings.bind ("tab-width", tab_width_button, "value", SettingsBindFlags.DEFAULT);
+    grid.attach_next_to (tab_width_button, use_spaces_instead_of_tabs_switch, PositionType.BOTTOM, 1, 1);
+    grid.attach_next_to (new Label (_("Tab width")), tab_width_button, PositionType.LEFT, 1, 1);
+
+    var highlight_matching_brackets_switch = new Switch();
+    settings.bind ("highlight-matching-brackets", highlight_matching_brackets_switch, "active", SettingsBindFlags.DEFAULT);
+    grid.attach_next_to (highlight_matching_brackets_switch, tab_width_button, PositionType.BOTTOM, 1, 1);
+    grid.attach_next_to (new Label (_("Highlight matching brackets")), highlight_matching_brackets_switch, PositionType.LEFT, 1, 1);
+
+    var highlight_syntax_switch = new Switch();
+    settings.bind ("highlight-syntax", highlight_syntax_switch, "active", SettingsBindFlags.DEFAULT);
+    grid.attach_next_to (highlight_syntax_switch, highlight_matching_brackets_switch, PositionType.BOTTOM, 1, 1);
+    grid.attach_next_to (new Label (_("Highlight the syntax")), highlight_syntax_switch, PositionType.LEFT, 1, 1);
+
+    var show_right_margin_switch = new Switch();
+    settings.bind ("show-right-margin", show_right_margin_switch, "active", SettingsBindFlags.DEFAULT);
+    grid.attach_next_to (show_right_margin_switch, highlight_syntax_switch, PositionType.BOTTOM, 1, 1);
+    grid.attach_next_to (new Label (_("Show the right margin")), show_right_margin_switch, PositionType.LEFT, 1, 1);
+
+    var right_margin_position_button = new SpinButton.with_range (0.0, 300.0, 1.0);
+    settings.bind ("right-margin-position", right_margin_position_button, "value", SettingsBindFlags.DEFAULT);
+    grid.attach_next_to (right_margin_position_button, show_right_margin_switch, PositionType.BOTTOM, 1, 1);
+    grid.attach_next_to (new Label (_("Right margin position")), right_margin_position_button, PositionType.LEFT, 1, 1);
+
+    // Show different spaces character
+    var show_spaces_switch = new Switch();
+    show_spaces_switch.set_active ((settings.show_spaces & SourceDrawSpacesFlags.SPACE) != 0);
+    show_spaces_switch.notify["active"].connect (() => {
+        settings.show_spaces ^= SourceDrawSpacesFlags.SPACE;
+    });
+    var lbl = new Label (_("Show spaces"));
+    grid.attach_next_to (lbl, show_line_numbers_switch, PositionType.RIGHT, 1, 1);
+    grid.attach_next_to (show_spaces_switch, lbl, PositionType.RIGHT, 1, 1);
+
+    var show_tabs_switch = new Switch();
+    show_tabs_switch.set_active ((settings.show_spaces & SourceDrawSpacesFlags.TAB) != 0);
+    show_tabs_switch.notify["active"].connect (() => {
+        settings.show_spaces ^= SourceDrawSpacesFlags.TAB;
+    });
+    grid.attach_next_to (show_tabs_switch, show_spaces_switch, PositionType.BOTTOM, 1, 1);
+    grid.attach_next_to (new Label (_("Show tabs")), show_tabs_switch, PositionType.LEFT, 1, 1);
+
+    var show_newline_switch = new Switch();
+    show_newline_switch.set_active ((settings.show_spaces & SourceDrawSpacesFlags.NEWLINE) != 0);
+    show_newline_switch.notify["active"].connect (() => {
+        settings.show_spaces ^= SourceDrawSpacesFlags.NEWLINE;
+    });
+    grid.attach_next_to (show_newline_switch, show_tabs_switch, PositionType.BOTTOM, 1, 1);
+    grid.attach_next_to (new Label (_("Show newline")), show_newline_switch, PositionType.LEFT, 1, 1);
+
+    foreach (Widget w in grid.get_children()) {
+        w.set_halign (Align.START);
+    }
+
+    box.pack_start (grid, false, false);
+
     var list = new ListStore (2, typeof (string), typeof (string), null);
     TreeIter iter;
     TreePath path = null;
@@ -115,13 +188,13 @@ public void ui_settings_dialog () {
             settings.color_scheme = (string) v;
         }
     });
-    box.pack_start (list_view);
+    var schema_scroll = new ScrolledWindow (null, null);
+    schema_scroll.add (list_view);
+    box.pack_start (schema_scroll);
 
     var font_button = new FontButton.with_font (settings.font);
-    box.pack_start (font_button, true, false);
-    font_button.font_set.connect (() => {
-        settings.font = font_button.get_font_name();
-    });
+    box.pack_start (font_button, false, false);
+    settings.bind ("font", font_button, "font_name", SettingsBindFlags.DEFAULT);
     dlg.response.connect ((response_id) => {
         switch (response_id) {
             case ResponseType.OK:
@@ -134,6 +207,7 @@ public void ui_settings_dialog () {
         }
     });
 
+    //TODO: look for settings change to update the view
     settings_box.add_section ("accessories-text-editor", _("Editor"), box);
     dlg.show_all ();
 }
