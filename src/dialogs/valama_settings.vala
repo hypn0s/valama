@@ -193,8 +193,12 @@ public void ui_settings_dialog () {
     box.pack_start (schema_scroll);
 
     var font_button = new FontButton.with_font (settings.font);
+    font_button.set_filter_func ( (family, face) => {
+        return family.is_monospace();
+    });
     box.pack_start (font_button, false, false);
     settings.bind ("font", font_button, "font_name", SettingsBindFlags.DEFAULT);
+    //TODO: restore old settings when discard or closing the dialog
     dlg.response.connect ((response_id) => {
         switch (response_id) {
             case ResponseType.OK:
