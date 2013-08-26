@@ -20,7 +20,7 @@
 class ValamaSettings: Settings {
 
     public ValamaSettings() {
-        Object (schema_id: "org.valama");    
+        Object (schema_id: "org.valama.editor");    
     }
 
     public int window_size_x {

@@ -70,12 +70,14 @@ public class SettingsBox: Paned {
         }
     }
 }
-public void ui_settings_dialog () {
-    string last_scheme = settings.color_scheme;
+public void ui_settings_dialog() {
+    settings.delay();
 
     var dlg = new Dialog.with_buttons (_("Preferences"), 
                                           window_main, 
                                           DialogFlags.MODAL,
+                                          _("_Discard"),
+                                          ResponseType.REJECT,
                                           _("_Cancel"),
                                           ResponseType.CANCEL,
                                           _("_Save"),
@@ -155,6 +157,14 @@ public void ui_settings_dialog () {
     grid.attach_next_to (show_newline_switch, show_tabs_switch, PositionType.BOTTOM, 1, 1);
     grid.attach_next_to (new Label (_("Show newline")), show_newline_switch, PositionType.LEFT, 1, 1);
 
+    settings.changed.connect ( (key) => {
+        if (key == "show_spaces") {
+            show_spaces_switch.set_active ((settings.show_spaces & SourceDrawSpacesFlags.SPACE) == SourceDrawSpacesFlags.SPACE);
+            show_tabs_switch.set_active ((settings.show_spaces & SourceDrawSpacesFlags.TAB) == SourceDrawSpacesFlags.TAB);
+            show_newline_switch.set_active ((settings.show_spaces & SourceDrawSpacesFlags.NEWLINE) == SourceDrawSpacesFlags.NEWLINE);
+        }
+    });
+
     foreach (Widget w in grid.get_children()) {
         w.set_halign (Align.START);
     }
@@ -198,20 +208,23 @@ public void ui_settings_dialog () {
     });
     box.pack_start (font_button, false, false);
     settings.bind ("font", font_button, "font_name", SettingsBindFlags.DEFAULT);
-    //TODO: restore old settings when discard or closing the dialog
     dlg.response.connect ((response_id) => {
         switch (response_id) {
+            case ResponseType.REJECT:
+                settings.revert();
+                break;
             case ResponseType.OK:
+                settings.apply();
                 dlg.destroy();
                 break;
             default:
-                settings.color_scheme = last_scheme;
+                settings.revert();
+                settings.apply();
                 dlg.destroy();
                 break;
         }
     });
 
-    //TODO: look for settings change to update the view
     settings_box.add_section ("accessories-text-editor", _("Editor"), box);
     dlg.show_all ();
 }
