@@ -312,8 +312,12 @@ install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${manfile}" DESTINATION "${mandir}/ma
 
 
 # Gsettings schemas
-include(GSettings)
-add_schema ("data/org.valama.editor.gschema.xml")
+if(LOCAL)
+  set(local_build "LOCAL")
+else()
+  set(local_build)
+endif()
+gsettings_install(${local_build} FILES "data/org.valama.editor.gschema.xml")
 
 install(TARGETS ${project_name_lower} DESTINATION "${bindir}")
 
