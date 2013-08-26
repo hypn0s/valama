@@ -317,7 +317,12 @@ if(LOCAL)
 else()
   set(local_build)
 endif()
-gsettings_install(${local_build} FILES "data/org.valama.editor.gschema.xml")
+file(
+    GLOB_RECURSE
+    schema_files
+    data/schemas/*.gschema.xml
+)
+gsettings_install(${local_build} FILES ${schema_files})
 
 install(TARGETS ${project_name_lower} DESTINATION "${bindir}")
 
