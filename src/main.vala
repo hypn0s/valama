@@ -29,6 +29,7 @@ static RecentManager recentmgr;
 static WelcomeScreen? vscreen = null;
 static Valama gtk_app;
 static ValamaSettings settings;
+static EditorSettings editor_settings;
 static SourceStyleSchemeManager style_manager;
 
 public static int main (string[] args) {
@@ -40,7 +41,8 @@ public static int main (string[] args) {
                                        "valama",
                                        "recent_projects.xml"));
 
-    settings = new ValamaSettings ();
+    settings = new ValamaSettings();
+    editor_settings = new EditorSettings();
     style_manager = new SourceStyleSchemeManager();
     style_manager.set_search_path ({"~/.local/share/gtksourceview-3.0/styles/", 
                                                 "/usr/share/gnome/gtksourceview-3.0/styles/",

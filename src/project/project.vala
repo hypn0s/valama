@@ -1342,7 +1342,7 @@ public class ValamaProject : ProjectFile {
         }
 
         /* Color scheme. */
-        settings.changed.connect ( (key) => {
+        editor_settings.changed.connect ( (key) => {
             load_editor_settings (view);
         });
 
@@ -1402,17 +1402,17 @@ public class ValamaProject : ProjectFile {
      */
     private void load_editor_settings (SourceView view) {
         var bfr = view.get_buffer() as SourceBuffer;
-        bfr.set_style_scheme (style_manager.get_scheme (settings.color_scheme));
-        view.override_font (FontDescription.from_string (settings.font));
-        view.set_show_line_numbers (settings.show_line_numbers);
-        view.set_insert_spaces_instead_of_tabs (settings.use_spaces_instead_of_tabs);
-        view.set_tab_width (settings.tab_width);
-        bfr.set_highlight_matching_brackets (settings.highlight_matching_brackets);
-        bfr.set_highlight_syntax (settings.highlight_syntax);
-        view.set_show_right_margin (settings.show_right_margin);
-        view.set_right_margin_position (settings.right_margin_position);
-        view.set_draw_spaces ((SourceDrawSpacesFlags) settings.show_spaces);
-        view.set_auto_indent (settings.auto_indent);
+        bfr.set_style_scheme (style_manager.get_scheme (editor_settings.color_scheme));
+        view.override_font (FontDescription.from_string (editor_settings.font));
+        view.set_show_line_numbers (editor_settings.show_line_numbers);
+        view.set_insert_spaces_instead_of_tabs (editor_settings.use_spaces_instead_of_tabs);
+        view.set_tab_width (editor_settings.tab_width);
+        bfr.set_highlight_matching_brackets (editor_settings.highlight_matching_brackets);
+        bfr.set_highlight_syntax (editor_settings.highlight_syntax);
+        view.set_show_right_margin (editor_settings.show_right_margin);
+        view.set_right_margin_position (editor_settings.right_margin_position);
+        view.set_draw_spaces ((SourceDrawSpacesFlags) editor_settings.show_spaces);
+        view.set_auto_indent (editor_settings.auto_indent);
     }
 
     /**
