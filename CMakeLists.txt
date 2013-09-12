@@ -47,7 +47,7 @@ list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/vala")
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake")
 
 
-find_package(Vala "0.17" REQUIRED)
+find_package(Vala "0.20.1" REQUIRED)
 
 
 option(TRANSLATION "Build translation." ON)
@@ -317,11 +317,7 @@ if(LOCAL)
 else()
   set(local_build)
 endif()
-file(
-    GLOB_RECURSE
-    schema_files
-    data/schemas/*.gschema.xml
-)
+file(GLOB_RECURSE schema_files data/schemas/*.gschema.xml)
 gsettings_install(${local_build} FILES ${schema_files})
 
 install(TARGETS ${project_name_lower} DESTINATION "${bindir}")
