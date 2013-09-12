@@ -22,8 +22,9 @@ using Gtk;
 using Gee;
 
 public class SettingsBox: Paned {
+    public Gee.List<GLib.Settings> all_settings { get; private set; }
     public TreeView sections { get; private set; }
-    public Map<string, Widget> sections_contents { get; private set; }
+    public Map<string, AbstracSettingsBox> sections_contents { get; private set; }
     public Frame content;
 
     public SettingsBox() {
@@ -33,6 +34,7 @@ public class SettingsBox: Paned {
         sections.insert_column_with_attributes (-1, _("Sections"), new CellRendererText(), "text", 1, null);
 
         sections_contents = new HashMap<string, Widget>();
+        all_settings = new Gee.LinkedList<GLib.Settings>();
 
         content = new Frame (null);
 
@@ -56,8 +58,10 @@ public class SettingsBox: Paned {
         });
     }
 
-    public void add_section (string icon_name, string label, Widget content) {
+    public void add_section (string icon_name, string label, AbstracSettingsBox content) {
         sections_contents.set (label, content);
+        all_settings.add (content.settings);
+        content.settings.delay();
         TreeIter it;
         var model = sections.get_model() as ListStore;
         model.append (out it);
@@ -71,8 +75,6 @@ public class SettingsBox: Paned {
     }
 }
 public void ui_settings_dialog() {
-    settings.delay();
-
     var dlg = new Dialog.with_buttons (_("Preferences"), 
                                           window_main, 
                                           DialogFlags.MODAL,
@@ -91,15 +93,22 @@ public void ui_settings_dialog() {
     dlg.response.connect ((response_id) => {
         switch (response_id) {
             case ResponseType.REJECT:
-                settings.revert();
+                foreach (GLib.Settings s in settings_box.all_settings) {
+                    s.revert();
+                    s.apply();
+                }
                 break;
             case ResponseType.OK:
-                settings.apply();
+                foreach (GLib.Settings s in settings_box.all_settings) {
+                    s.apply();
+                }
                 dlg.destroy();
                 break;
             default:
-                settings.revert();
-                settings.apply();
+                foreach (GLib.Settings s in settings_box.all_settings) {
+                    s.revert();
+                    s.apply();
+                }
                 dlg.destroy();
                 break;
         }

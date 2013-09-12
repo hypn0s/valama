@@ -83,8 +83,9 @@ public class EditorSettings: GLib.Settings {
     }
 }
 
-public class EditorSettingsBox: Box {
+public class EditorSettingsBox: AbstracSettingsBox {
     public EditorSettingsBox() {
+        this.settings = editor_settings;
         this.orientation = Orientation.VERTICAL;
         this.margin = 5;
 
@@ -195,6 +196,23 @@ public class EditorSettingsBox: Box {
                 editor_settings.color_scheme = (string) v;
             }
         });
+        editor_settings.changed.connect ( (key) => {
+            if (key == "color-scheme") {
+                list.foreach((model, path, it) => {
+                    Value v;
+                    string s;
+                    list.get_value (it, 0, out v);
+                    s = (string) v;
+                    stdout.printf ("it = %s\n", s);
+                    if (s == editor_settings.color_scheme) {
+                        var select = list_view.get_selection ();
+                        select.select_iter (it);
+                    }
+                    return false;
+                });
+            }
+        });
+
         var schema_scroll = new ScrolledWindow (null, null);
         schema_scroll.add (list_view);
         this.pack_start (schema_scroll);

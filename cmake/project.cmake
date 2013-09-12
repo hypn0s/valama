@@ -39,6 +39,7 @@ set(srcfiles
   "src/dialogs/project_settings.vala"
   "src/dialogs/simple_settings.vala"
   "src/dialogs/valama_settings.vala"
+  "src/dialogs/settings/abstract_settings.vala"
   "src/dialogs/settings/editor_settings.vala"
   "src/main.vala"
   "src/project/build_project.vala"
