@@ -40,15 +40,18 @@ public static int main (string[] args) {
                                        Environment.get_user_cache_dir(),
                                        "valama",
                                        "recent_projects.xml"));
-
+    SettingsSchemaSource sss = SettingsSchemaSource.get_default();
+    if (sss.lookup ("org.valama.window", false) == null) {
+        stdout.printf ("ID org.valama.window not found.");
+        return 0;
+    } else if (sss.lookup ("org.valama.editor", false) == null) {
+        stdout.printf ("ID org.valama.editor not found.");
+        return 0;
+    }
     settings = new ValamaSettings();
     editor_settings = new EditorSettings();
+
     style_manager = new SourceStyleSchemeManager();
-    style_manager.set_search_path ({"~/.local/share/gtksourceview-3.0/styles/", 
-                                                "/usr/share/gnome/gtksourceview-3.0/styles/",
-                                                "/usr/local/share/gtksourceview-3.0/styles/",
-                                                "/usr/share/gtksourceview-3.0/styles/"});
-    style_manager.force_rescan();
 
     /* Command line parsing. */
     /* Copied from Yorba application. */
