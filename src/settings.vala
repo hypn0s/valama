@@ -17,20 +17,21 @@
  *
  */
 
-class ValamaSettings {
+class ValamaSettings: Settings {
 
     public ValamaSettings() {
-        settings = new Settings ("org.valama");
+        Object (schema_id: "org.valama.window");
     }
-    Settings settings;
-
+    
     public int window_size_x {
-        get { return settings.get_int ("window-size-x"); }
-        set { settings.set_int ("window-size-x", value); }
+        get { return this.get_int ("window-size-x"); }
+        set { this.set_int ("window-size-x", value); }
+        default = 950;
     }
     public int window_size_y {
-        get { return settings.get_int ("window-size-y"); }
-        set { settings.set_int ("window-size-y", value); }
+        get { return this.get_int ("window-size-y"); }
+        set { this.set_int ("window-size-y", value); }
+        default = 700;
     }
 
 }

@@ -31,6 +31,8 @@ static RecentManager recentmgr;
 static WelcomeScreen.WelcomeScreen? vscreen = null;
 static Valama gtk_app;
 static ValamaSettings settings;
+static EditorSettings editor_settings;
+static SourceStyleSchemeManager style_manager;
 
 static TreeMap<string, BuildSystemTemplate>? buildsystems = null;
 static TreeMap<string, ProjectTemplate>? templates = null;
@@ -49,7 +51,19 @@ public static int main (string[] args) {
                                        "recent_projects.xml"));
     load_locales();
 
-    settings = new ValamaSettings ();
+    SettingsSchemaSource sss = SettingsSchemaSource.get_default();
+    if (sss.lookup ("org.valama.window", false) == null) {
+        stdout.printf ("ID org.valama.window not found.");
+        return 0;
+    } 
+    if (sss.lookup ("org.valama.editor", false) == null) {
+        stdout.printf ("ID org.valama.editor not found.");
+        return 0;
+    }
+    settings = new ValamaSettings();
+    editor_settings = new EditorSettings();
+
+    style_manager = new SourceStyleSchemeManager();
 
     /* Command line parsing. */
     /* Copied from Yorba application. */

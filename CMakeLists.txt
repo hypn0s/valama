@@ -170,6 +170,7 @@ set(default_vala_flags
   "--target-glib" "${GLIB2.0_VERSION}"
   "--enable-experimental"
   "--fatal-warnings"
+	"-g" "--save-temps"
 )
 
 include(ValaPkgs)
@@ -302,8 +303,12 @@ if(LOCAL)
 else()
   set(local_build)
 endif()
-gsettings_install(${local_build} FILES "data/org.valama.gschema.xml")
-
+file(
+  GLOB_RECURSE
+  schema_files
+  data/schemas/*.gschema.xml
+)
+gsettings_install(${local_build} FILES ${schema_files})
 
 install(TARGETS ${project_name_lower} DESTINATION "${bindir}")
 

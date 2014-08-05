@@ -1,0 +1,4 @@
+<schemalist>
+    <schema id="org.valama.debug" path="/org/valama/debug/" gettext-domain="valama">
+    </schema>
+</schemalist>

@@ -354,6 +354,13 @@ public class MainWidget : Box {
         project.redo_changed.connect (item_edit_redo.set_sensitive);
         add_accel_activate (item_edit_redo, Gdk.Key.r);
 
+        //TRANSLATORS: Show general settings dialog.
+        var item_edit_settings = new ImageMenuItem.with_mnemonic (_("_Settings"));
+        var image_edit_settings = new Image();
+        image_edit_settings.icon_name = "preferences-system-symbolic";
+        menu_edit.append (item_edit_settings);
+        item_edit_settings.activate.connect (ui_settings_dialog);
+
         var item_edit_search = new ImageMenuItem.with_mnemonic (_("_Search"));
         var image_edit_search = new Image();
         image_edit_search.icon_name = "edit-search";
